@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Вход в систему</title>
+    <style>
+        :root {
+            --orange-500: #ff6b1a;
+            --orange-600: #f55a0a;
+            --orange-100: #fff3e8;
+            --orange-50:  #fff8f1;
+            --white:      #ffffff;
+            --gray-50:    #fafafa;
+            --gray-100:   #f4f4f5;
+            --gray-300:   #d4d4d8;
+            --gray-500:   #71717a;
+            --gray-700:   #3f3f46;
+            --gray-900:   #18181b;
+            --red-500:    #ef4444;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        html, body { height: 100%; }
+
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background:
+                radial-gradient(circle at 15% 20%, var(--orange-100) 0%, transparent 45%),
+                radial-gradient(circle at 85% 80%, var(--orange-50)  0%, transparent 45%),
+                var(--white);
+            font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+            color: var(--gray-900);
+            padding: 1rem;
+        }
+
+        /* Декоративные оранжевые круги */
+        .blob {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.5;
+            z-index: 0;
+            pointer-events: none;
+        }
+        .blob-1 {
+            width: 380px; height: 380px;
+            background: #ffb980;
+            top: -120px; left: -120px;
+            animation: float 12s ease-in-out infinite;
+        }
+        .blob-2 {
+            width: 300px; height: 300px;
+            background: #ffc99a;
+            bottom: -100px; right: -100px;
+            animation: float 14s ease-in-out infinite reverse;
+        }
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0); }
+            50%      { transform: translate(30px, -30px); }
+        }
+
+        .card {
+            position: relative;
+            z-index: 1;
+            background: var(--white);
+            border: 1px solid var(--gray-100);
+            padding: 3rem 2.5rem;
+            border-radius: 1.75rem;
+            box-shadow:
+                0 1px 2px rgba(0, 0, 0, 0.04),
+                0 20px 40px -10px rgba(255, 107, 26, 0.15);
+            width: 100%;
+            max-width: 440px;
+            text-align: center;
+            animation: fadeUp 0.6s ease-out;
+        }
+
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(16px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Логотип / иконка */
+        .logo {
+            width: 64px;
+            height: 64px;
+            margin: 0 auto 1.5rem;
+            background: linear-gradient(135deg, var(--orange-500), var(--orange-600));
+            border-radius: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 10px 25px -5px rgba(255, 107, 26, 0.4);
+        }
+        .logo svg {
+            width: 32px;
+            height: 32px;
+            color: var(--white);
+        }
+
+        h1 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: var(--gray-900);
+            letter-spacing: -0.02em;
+        }
+
+        .subtitle {
+            color: var(--gray-500);
+            font-size: 0.95rem;
+            margin-bottom: 2rem;
+            line-height: 1.5;
+        }
+
+        .input-wrapper {
+            position: relative;
+            margin-bottom: 1rem;
+        }
+
+        input {
+            width: 100%;
+            padding: 1rem 1.25rem;
+            border-radius: 0.875rem;
+            border: 2px solid var(--gray-100);
+            background: var(--gray-50);
+            color: var(--gray-900);
+            font-size: 1rem;
+            font-family: inherit;
+            outline: none;
+            transition: all 0.25s ease;
+        }
+
+        input::placeholder { color: var(--gray-500); }
+
+        input:hover { border-color: var(--gray-300); }
+
+        input:focus {
+            border-color: var(--orange-500);
+            background: var(--white);
+            box-shadow: 0 0 0 4px rgba(255, 107, 26, 0.12);
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 1rem;
+            border: none;
+            border-radius: 0.875rem;
+            background: linear-gradient(135deg, var(--orange-500), var(--orange-600));
+            color: var(--white);
+            font-size: 1rem;
+            font-weight: 600;
+            font-family: inherit;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            box-shadow: 0 6px 16px -4px rgba(255, 107, 26, 0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .submit-btn:hover:not(:disabled) {
+            transform: translateY(-1px);
+            box-shadow: 0 10px 20px -4px rgba(255, 107, 26, 0.5);
+        }
+
+        .submit-btn:active:not(:disabled) { transform: translateY(0); }
+
+        .submit-btn:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+
+        .spinner {
+            width: 18px;
+            height: 18px;
+            border: 2.5px solid rgba(255, 255, 255, 0.4);
+            border-top-color: var(--white);
+            border-radius: 50%;
+            animation: spin 0.7s linear infinite;
+            display: none;
+        }
+
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        .error {
+            margin-top: 1rem;
+            color: var(--red-500);
+            font-size: 0.9rem;
+            min-height: 1.2em;
+            opacity: 0;
+            transform: translateY(-4px);
+            transition: all 0.3s ease;
+        }
+        .error.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .footer {
+            margin-top: 2rem;
+            font-size: 0.8rem;
+            color: var(--gray-500);
+        }
+        .footer a {
+            color: var(--orange-500);
+            text-decoration: none;
+            font-weight: 500;
+        }
+        .footer a:hover { text-decoration: underline; }
+
+        /* Shake-анимация при ошибке */
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25%      { transform: translateX(-8px); }
+            75%      { transform: translateX(8px); }
+        }
+        .shake { animation: shake 0.4s ease; }
+
+        @media (max-width: 480px) {
+            .card { padding: 2rem 1.5rem; }
+            h1 { font-size: 1.3rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+
+    <div class="card" id="card">
+        <div class="logo">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/>
+                <polyline points="10 17 15 12 10 7"/>
+                <line x1="15" y1="12" x2="3" y2="12"/>
+            </svg>
+        </div>
+
+        <h1>Добро пожаловать</h1>
+        <p class="subtitle">Введите ваш персональный код для продолжения</p>
+
+        <form id="authForm" autocomplete="off">
+            <div class="input-wrapper">
+                <input
+                    type="text"
+                    id="userId"
+                    placeholder="Ваш код доступа"
+                    autocomplete="off"
+                    spellcheck="false"
+                    required
+                >
+            </div>
+            <button type="submit" class="submit-btn" id="submitBtn">
+                <span id="btnText">Войти</span>
+                <div class="spinner" id="spinner"></div>
+            </button>
+        </form>
+
+        <div class="error" id="error"></div>
+
+        <div class="footer">
+            Нужна помощь? <a href="#">Связаться с поддержкой</a>
+        </div>
+    </div>
+
+    <script>
+        const form      = document.getElementById('authForm');
+        const input     = document.getElementById('userId');
+        const errorEl   = document.getElementById('error');
+        const spinner   = document.getElementById('spinner');
+        const btnText   = document.getElementById('btnText');
+        const submitBtn = document.getElementById('submitBtn');
+        const card      = document.getElementById('card');
+
+        function showError(msg) {
+            errorEl.textContent = msg;
+            errorEl.classList.add('show');
+            card.classList.remove('shake');
+            void card.offsetWidth; // перезапуск анимации
+            card.classList.add('shake');
+        }
+
+        function hideError() {
+            errorEl.classList.remove('show');
+        }
+
+        function setLoading(loading) {
+            submitBtn.disabled = loading;
+            spinner.style.display = loading ? 'block' : 'none';
+            btnText.textContent = loading ? 'Проверяем...' : 'Войти';
+        }
+
+        async function checkUser(value) {
+            hideError();
+            setLoading(true);
+
+            try {
+                const res = await fetch('/api/check', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ input: value })
+                });
+
+                const data = await res.json();
+
+                if (res.ok && data.redirect) {
+                    window.location.href = data.redirect;
+                } else {
+                    showError(data.error || 'Неверный код доступа');
+                    setLoading(false);
+                    input.select();
+                }
+            } catch (e) {
+                showError('Ошибка соединения. Попробуйте позже.');
+                setLoading(false);
+            }
+        }
+
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const val = input.value.trim();
+            if (val) checkUser(val);
+        });
+
+        // Скрываем ошибку при вводе
+        input.addEventListener('input', hideError);
+    </script>
+</body>
+</html>

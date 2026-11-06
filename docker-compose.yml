@@ -1,0 +1,21 @@
+services:
+  web:
+    build: .
+    container_name: zigluchka_app
+    ports:
+      - "8080:8000"
+    environment:
+      # Передаем список как JSON-объект: {"ID_пользователя": "путь_для_редиректа"}
+      USERS: >
+        {
+          "п": "/dashboard",
+          "майкл джексон": "/vip-zone",
+          "ivan_petrov": "/client/ivan",
+          "company_x": "/partner/x"
+        }
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/')"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
