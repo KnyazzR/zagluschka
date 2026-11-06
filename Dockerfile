@@ -2,14 +2,14 @@ FROM python:3.11-slim
 
 WORKDIR /app
 
-# Устанавливаем только необходимые пакеты
-RUN pip install --no-cache-dir fastapi uvicorn
+# Копируем и устанавливаем зависимости (кэшируется Docker'ом)
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
 
-# Копируем файл сервера и папку фронтенда
+# Копируем код приложения
 COPY main.py .
 COPY frontend ./frontend
 
 EXPOSE 8000
 
-# Запускаем production-сервер uvicorn
 CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
