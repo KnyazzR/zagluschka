@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Интерактивное поле ввода</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f0f2f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            text-align: center;
+            max-width: 400px;
+            width: 100%;
+        }
+        h1 {
+            color: #333;
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+        input[type="text"] {
+            width: 100%;
+            padding: 12px 20px;
+            margin: 8px 0;
+            box-sizing: border-box;
+            border: 2px solid #ccc;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: 0.3s;
+            outline: none;
+        }
+        input[type="text"]:focus {
+            border-color: #007bff;
+        }
+        .hint {
+            font-size: 12px;
+            color: #666;
+            margin-top: 15px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Введите текст</h1>
+    <!-- Поле ввода, которое отслеживает каждый нажатый символ -->
+    <input type="text" id="magicInput" placeholder="Начните писать здесь..." autofocus>
+    <p class="hint">Попробуйте ввести «п» или «майкл джексон»</p>
+</div>
+
+<script>
+    const inputField = document.getElementById('magicInput');
+
+    inputField.addEventListener('input', function() {
+        // Приводим текст к нижнему регистру, чтобы проверка работала независимо от Caps Lock
+        const value = inputField.value.toLowerCase().trim();
+
+        // 1. Если ввели букву "п" (русская или английская "p" на всякий случай)
+        if (value === 'п' || value === 'p') {
+            // Перенаправляем на другую страницу (в данном случае на Яндекс, можете заменить на свою ссылку)
+            window.location.href = 'https://yandex.ru'; 
+        } 
+        
+        // 2. Если ввели "майкл джексон"
+        else if (value === 'майкл джексон' || value === 'michael jackson') {
+            // Рикроллим! Перенаправляем на знаменитый клип Рика Эстли
+            window.location.href = 'https://youtube.com';
+        }
+    });
+</script>
+
+</body>
+</html>
